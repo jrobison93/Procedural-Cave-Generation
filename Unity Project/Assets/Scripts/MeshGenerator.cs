@@ -4,7 +4,10 @@ using System.Collections.Generic;
 
 public class MeshGenerator : MonoBehaviour {
 
-	public SquareGrid squareGrid;
+
+    const float wallHeight = 5;
+
+    public SquareGrid squareGrid;
 	public MeshFilter walls;
 	public MeshFilter cave;
 
@@ -65,35 +68,61 @@ public class MeshGenerator : MonoBehaviour {
 
 		CalculateMeshOutlines ();
 
-		List<Vector3> wallVertices = new List<Vector3> ();
-		List<int> wallTriangles = new List<int> ();
+		
 		Mesh wallMesh = new Mesh ();
-		float wallHeight = 5;
 
-		foreach (List<int> outline in outlines) {
-			for (int i = 0; i < outline.Count -1; i ++) {
-				int startIndex = wallVertices.Count;
-				wallVertices.Add(vertices[outline[i]]); // left
-				wallVertices.Add(vertices[outline[i+1]]); // right
-				wallVertices.Add(vertices[outline[i]] - Vector3.up * wallHeight); // bottom left
-				wallVertices.Add(vertices[outline[i+1]] - Vector3.up * wallHeight); // bottom right
 
-				wallTriangles.Add(startIndex + 0);
-				wallTriangles.Add(startIndex + 2);
-				wallTriangles.Add(startIndex + 3);
-
-				wallTriangles.Add(startIndex + 3);
-				wallTriangles.Add(startIndex + 1);
-				wallTriangles.Add(startIndex + 0);
-			}
-		}
-		wallMesh.vertices = wallVertices.ToArray ();
-		wallMesh.triangles = wallTriangles.ToArray ();
+		wallMesh.vertices = GetWallVerticies();
+		wallMesh.triangles = GetWallTriangles();
 		walls.mesh = wallMesh;
 
 		MeshCollider wallCollider = gameObject.AddComponent<MeshCollider> ();
 		wallCollider.sharedMesh = wallMesh;
 	}
+
+    Vector3[] GetWallVerticies()
+    {
+        List<Vector3> wallVertices = new List<Vector3>();
+
+        foreach (List<int> outline in outlines)
+        {
+            for (int i = 0; i < outline.Count - 1; i++)
+            {
+                int startIndex = wallVertices.Count;
+                wallVertices.Add(vertices[outline[i]]); // left
+                wallVertices.Add(vertices[outline[i + 1]]); // right
+                wallVertices.Add(vertices[outline[i]] - Vector3.up * wallHeight); // bottom left
+                wallVertices.Add(vertices[outline[i + 1]] - Vector3.up * wallHeight); // bottom right
+            }
+        }
+
+        return wallVertices.ToArray();
+    }
+
+    int[] GetWallTriangles()
+    {
+
+        List<int> wallTriangles = new List<int>();
+        int index = 0;
+
+        foreach (List<int> outline in outlines)
+        {
+            for (int i = 0; i < outline.Count - 1; i++)
+            {
+                wallTriangles.Add(index + 0);
+                wallTriangles.Add(index + 2);
+                wallTriangles.Add(index + 3);
+
+                wallTriangles.Add(index + 3);
+                wallTriangles.Add(index + 1);
+                wallTriangles.Add(index + 0);
+
+                index += 4;
+            }
+        }
+
+        return wallTriangles.ToArray();
+    }
 
 	void Generate2DColliders() {
 
