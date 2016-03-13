@@ -20,16 +20,9 @@ public class MeshGenerator : MonoBehaviour {
 	List<List<int>> outlines = new List<List<int>> ();
 	HashSet<int> checkedVertices = new HashSet<int>();
 
-	public void GenerateMesh(int[,] map, float squareSize) {
-
-		triangleDictionary.Clear ();
-		outlines.Clear ();
-		checkedVertices.Clear ();
-
-		squareGrid = new SquareGrid(map, squareSize);
-
-		vertices = new List<Vector3>();
-		triangles = new List<int>();
+	public void GenerateMesh(int[,] map, float squareSize)
+    {
+        InitializeContainers(map, squareSize);
 
 		for (int x = 0; x < squareGrid.squares.GetLength(0); x ++) {
 			for (int y = 0; y < squareGrid.squares.GetLength(1); y ++) {
@@ -37,22 +30,7 @@ public class MeshGenerator : MonoBehaviour {
 			}
 		}
 
-		Mesh mesh = new Mesh();
-		cave.mesh = mesh;
-
-		mesh.vertices = vertices.ToArray();
-		mesh.triangles = triangles.ToArray();
-		mesh.RecalculateNormals();
-
-		int tileAmount = 10;
-		Vector2[] uvs = new Vector2[vertices.Count];
-		for (int i =0; i < vertices.Count; i ++) {
-			float percentX = Mathf.InverseLerp(-map.GetLength(0)/2*squareSize,map.GetLength(0)/2*squareSize,vertices[i].x) * tileAmount;
-			float percentY = Mathf.InverseLerp(-map.GetLength(0)/2*squareSize,map.GetLength(0)/2*squareSize,vertices[i].z) * tileAmount;
-			uvs[i] = new Vector2(percentX,percentY);
-		}
-		mesh.uv = uvs;
-	
+        CalculateMeshUVs(map, squareSize);
 
 		if (is2D) {
 			Generate2DColliders();
@@ -60,6 +38,38 @@ public class MeshGenerator : MonoBehaviour {
 			CreateWallMesh ();
 		}
 	}
+
+    void InitializeContainers(int[,] map, float squareSize)
+    {
+        triangleDictionary.Clear();
+        outlines.Clear();
+        checkedVertices.Clear();
+
+        squareGrid = new SquareGrid(map, squareSize);
+
+        vertices = new List<Vector3>();
+        triangles = new List<int>();
+    }
+
+    void CalculateMeshUVs(int[,] map, float squareSize)
+    {
+        Mesh mesh = new Mesh();
+        cave.mesh = mesh;
+
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.RecalculateNormals();
+
+        int tileAmount = 10;
+        Vector2[] uvs = new Vector2[vertices.Count];
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            float percentX = Mathf.InverseLerp(-map.GetLength(0) / 2 * squareSize, map.GetLength(0) / 2 * squareSize, vertices[i].x) * tileAmount;
+            float percentY = Mathf.InverseLerp(-map.GetLength(0) / 2 * squareSize, map.GetLength(0) / 2 * squareSize, vertices[i].z) * tileAmount;
+            uvs[i] = new Vector2(percentX, percentY);
+        }
+        mesh.uv = uvs;
+    }
 
 	void CreateWallMesh() {
 
@@ -88,7 +98,6 @@ public class MeshGenerator : MonoBehaviour {
         {
             for (int i = 0; i < outline.Count - 1; i++)
             {
-                int startIndex = wallVertices.Count;
                 wallVertices.Add(vertices[outline[i]]); // left
                 wallVertices.Add(vertices[outline[i + 1]]); // right
                 wallVertices.Add(vertices[outline[i]] - Vector3.up * wallHeight); // bottom left
