@@ -7,51 +7,51 @@ using System.Collections.Generic;
 public class MeshTests
 {
     MeshGenerator mesh;
-    MeshGenerator.Node[] nodes1;
-    MeshGenerator.Node[] nodes2;
-    MeshGenerator.Node[] nodes3;
-    MeshGenerator.Node[] nodes4;
-    MeshGenerator.Node[] nodes5;
-    MeshGenerator.Node[] nodes6;
+    Node[] nodes1;
+    Node[] nodes2;
+    Node[] nodes3;
+    Node[] nodes4;
+    Node[] nodes5;
+    Node[] nodes6;
 
     [SetUp]
     public void Init()
     {
         mesh = new MeshGenerator();
 
-        nodes1 = new MeshGenerator.Node[3] { new MeshGenerator.Node(new Vector3(1, 2, 3)),
-                                             new MeshGenerator.Node(new Vector3(4, 5, 6)),
-                                             new MeshGenerator.Node(new Vector3(7, 8, 9)) };
+        nodes1 = new Node[3] { new Node(new Vector3(1, 2, 3)),
+                                        new Node(new Vector3(4, 5, 6)),
+                                        new Node(new Vector3(7, 8, 9)) };
 
         nodes1[0].vertexIndex = 1;
         nodes1[1].vertexIndex = 2;
         nodes1[2].vertexIndex = 3;
 
-        nodes2 = new MeshGenerator.Node[3] { new MeshGenerator.Node(new Vector3(9, 8, 7)),
-                                             new MeshGenerator.Node(new Vector3(6, 5, 4)),
-                                             new MeshGenerator.Node(new Vector3(3, 2, 1)) };
+        nodes2 = new Node[3] { new Node(new Vector3(9, 8, 7)),
+                                        new Node(new Vector3(6, 5, 4)),
+                                        new Node(new Vector3(3, 2, 1)) };
 
         nodes2[0].vertexIndex = 4;
         nodes2[1].vertexIndex = 5;
         nodes2[2].vertexIndex = 6;
 
-        nodes3 = new MeshGenerator.Node[3] { nodes1[0], nodes2[1], nodes2[0] };
+        nodes3 = new Node[3] { nodes1[0], nodes2[1], nodes2[0] };
 
-        nodes4 = new MeshGenerator.Node[4] { new MeshGenerator.Node(new Vector3(0, 0, 0)),
-                                             new MeshGenerator.Node(new Vector3(1, 2, 3)),
-                                             new MeshGenerator.Node(new Vector3(9, 9, 9)),
-                                             new MeshGenerator.Node(new Vector3(0, 5, 9))};
+        nodes4 = new Node[4] { new Node(new Vector3(0, 0, 0)),
+                                        new Node(new Vector3(1, 2, 3)),
+                                        new Node(new Vector3(9, 9, 9)),
+                                        new Node(new Vector3(0, 5, 9))};
 
         nodes4[0].vertexIndex = 7;
         nodes4[1].vertexIndex = 8;
         nodes4[2].vertexIndex = 9;
         nodes4[3].vertexIndex = 10;
 
-        nodes5 = new MeshGenerator.Node[5] { new MeshGenerator.Node(new Vector3(0, 0, 0)),
-                                             new MeshGenerator.Node(new Vector3(1, 2, 3)),
-                                             new MeshGenerator.Node(new Vector3(9, 9, 9)),
-                                             new MeshGenerator.Node(new Vector3(0, 5, 9)),
-                                             new MeshGenerator.Node(new Vector3(10, 10, 10))};
+        nodes5 = new Node[5] { new Node(new Vector3(0, 0, 0)),
+                                        new Node(new Vector3(1, 2, 3)),
+                                        new Node(new Vector3(9, 9, 9)),
+                                        new Node(new Vector3(0, 5, 9)),
+                                        new Node(new Vector3(10, 10, 10))};
 
         nodes5[0].vertexIndex = 11;
         nodes5[1].vertexIndex = 12;
@@ -59,12 +59,12 @@ public class MeshTests
         nodes5[3].vertexIndex = 14;
         nodes5[4].vertexIndex = 15;
 
-        nodes6 = new MeshGenerator.Node[6] { new MeshGenerator.Node(new Vector3(0, 0, 0)),
-                                             new MeshGenerator.Node(new Vector3(1, 2, 3)),
-                                             new MeshGenerator.Node(new Vector3(9, 9, 9)),
-                                             new MeshGenerator.Node(new Vector3(0, 5, 9)),
-                                             new MeshGenerator.Node(new Vector3(6, 6, 6)),
-                                             new MeshGenerator.Node(new Vector3(5, 4, 3))};
+        nodes6 = new Node[6] { new Node(new Vector3(0, 0, 0)),
+                                        new Node(new Vector3(1, 2, 3)),
+                                        new Node(new Vector3(9, 9, 9)),
+                                        new Node(new Vector3(0, 5, 9)),
+                                        new Node(new Vector3(6, 6, 6)),
+                                        new Node(new Vector3(5, 4, 3))};
 
         nodes6[0].vertexIndex = 16;
         nodes6[1].vertexIndex = 17;
@@ -126,7 +126,7 @@ public class MeshTests
     [Test]
     public void MeshFromPointsTest()
     {
-        UnitTestUtilities.RunInstanceMethod(typeof(MeshGenerator), "MeshFromPoints", mesh, new object[] { new MeshGenerator.Node[0] });
+        UnitTestUtilities.RunInstanceMethod(typeof(MeshGenerator), "MeshFromPoints", mesh, new object[] { new Node[0] });
         Dictionary<int, List<Triangle>> triangles = (Dictionary<int, List<Triangle>>)UnitTestUtilities.GetInstanceField(typeof(MeshGenerator), mesh, "triangleDictionary");
 
         Assert.AreEqual(0, triangles.Keys.Count);
